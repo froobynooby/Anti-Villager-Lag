@@ -3,6 +3,6 @@ main: com.froobworld.avl.Avl
 author: froobynooby
 version: 1.0.0
 api-version: 1.14
-depend: [SAML]
+load-before: [SAML]
 description: >
              SAML add-on for reducing lag due to villagers.
