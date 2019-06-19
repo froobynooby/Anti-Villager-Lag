@@ -21,7 +21,7 @@ public class CompatibilityCheckTask implements Runnable {
             return;
         }
         try {
-            CraftMemoryMapper.toNms(null);
+            Object test = CraftMemoryMapper.toNms((Object) null);
         } catch (UnsupportedOperationException e) {
             disablePlugin();
             return;
