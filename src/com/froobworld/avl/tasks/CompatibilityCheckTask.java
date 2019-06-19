@@ -18,6 +18,7 @@ public class CompatibilityCheckTask implements Runnable {
         try {
             org.bukkit.entity.memory.MemoryKey.class.getClass();
             org.bukkit.persistence.PersistentDataHolder.class.getClass();
+            com.froobworld.saml.events.SamlMobUnfreezeEvent.class.getClass();
         } catch (NoClassDefFoundError e) {
             disablePlugin();
             return;
