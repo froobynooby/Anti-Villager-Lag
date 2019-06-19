@@ -6,9 +6,11 @@ import org.bukkit.craftbukkit.v1_14_R1.entity.memory.CraftMemoryMapper;
 
 public class CompatibilityCheckTask implements Runnable {
     private Avl avl;
+    private boolean pass;
 
     public CompatibilityCheckTask(Avl avl) {
         this.avl = avl;
+        run();
     }
 
     @Override
@@ -26,10 +28,16 @@ public class CompatibilityCheckTask implements Runnable {
             disablePlugin();
             return;
         }
+        pass = true;
     }
 
     private void disablePlugin() {
         Avl.logger().warning("Sorry, Anti-Villager Lag is not compatible with the version you are using.");
         Bukkit.getPluginManager().disablePlugin(avl);
+        pass = false;
+    }
+
+    public boolean passedCheck() {
+        return pass;
     }
 }

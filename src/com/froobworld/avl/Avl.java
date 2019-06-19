@@ -10,8 +10,9 @@ import java.util.logging.Logger;
 public class Avl extends JavaPlugin {
 
     public void onEnable() {
-        new CompatibilityCheckTask(this).run();
-        Bukkit.getPluginManager().registerEvents(new EventListener(this), this);
+        if(new CompatibilityCheckTask(this).passedCheck()) {
+            Bukkit.getPluginManager().registerEvents(new EventListener(this), this);
+        }
     }
 
     public static Logger logger() {
