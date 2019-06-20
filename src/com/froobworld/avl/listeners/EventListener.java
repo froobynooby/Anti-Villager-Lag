@@ -1,7 +1,7 @@
 package com.froobworld.avl.listeners;
 
 import com.froobworld.avl.Avl;
-import com.froobworld.avl.utils.MemorySetter;
+import com.froobworld.avl.utils.ActivityUtils;
 import com.froobworld.saml.events.SamlMobFreezeEvent;
 import com.froobworld.saml.events.SamlMobUnfreezeEvent;
 import org.bukkit.entity.LivingEntity;
@@ -22,7 +22,7 @@ public class EventListener implements Listener {
     public void onSamlMobFreeze(SamlMobFreezeEvent event) {
         for(LivingEntity entity : event.getMobsToFreeze()) {
             if(entity instanceof Villager) {
-                MemorySetter.setMissingMemories(avl, (Villager) entity);
+                ActivityUtils.setActivitiesEmpty((Villager) entity);
             }
         }
     }
@@ -31,7 +31,7 @@ public class EventListener implements Listener {
     public void onSamlMobUnfreeze(SamlMobUnfreezeEvent event) {
         for(LivingEntity entity : event.getUnfrozenMobs()) {
             if(entity instanceof Villager) {
-                MemorySetter.unsetMissingMemories(avl, (Villager) entity);
+                ActivityUtils.setActivitiesNormal((Villager) entity);
             }
         }
     }

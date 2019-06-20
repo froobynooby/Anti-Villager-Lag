@@ -2,10 +2,14 @@ package com.froobworld.avl.tasks;
 
 import com.froobworld.avl.Avl;
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_14_R1.entity.memory.CraftMemoryMapper;
 
 public class CompatibilityCheckTask implements Runnable {
+    private final static String NAME = Bukkit.getServer().getClass().getPackage().getName();
+    public final static String VERSION = NAME.substring(NAME.lastIndexOf('.') + 1);
+
     private Avl avl;
+    private String[] supportedVersions = new String[]{"v1_14_R1"};
+
     private boolean pass;
 
     public CompatibilityCheckTask(Avl avl) {
@@ -16,26 +20,27 @@ public class CompatibilityCheckTask implements Runnable {
     @Override
     public void run() {
         try {
-            org.bukkit.entity.memory.MemoryKey.class.getClass();
-            org.bukkit.persistence.PersistentDataHolder.class.getClass();
             com.froobworld.saml.events.SamlMobUnfreezeEvent.class.getClass();
         } catch (NoClassDefFoundError e) {
-            disablePlugin();
+            pass = false;
+            disablePlugin("Either this plugin is not compatible with the version of SAML you are using, or you don't have SAML.");
             return;
         }
-        try {
-            Object test = CraftMemoryMapper.toNms((Object) null);
-        } catch (UnsupportedOperationException e) {
-            disablePlugin();
-            return;
+        for(String string : supportedVersions) {
+            if(string.equals(VERSION)) {
+                pass = true;
+                break;
+            }
+            pass = false;
         }
-        pass = true;
+        if(!pass) {
+            disablePlugin("This plugin is not compatible with the version of Minecraft you are using.");
+        }
     }
 
-    private void disablePlugin() {
-        Avl.logger().warning("Sorry, Anti-Villager Lag is not compatible with the version you are using.");
+    private void disablePlugin(String message) {
+        Avl.logger().warning(message);
         Bukkit.getPluginManager().disablePlugin(avl);
-        pass = false;
     }
 
     public boolean passedCheck() {
