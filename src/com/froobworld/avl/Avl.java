@@ -13,8 +13,19 @@ public class Avl extends JavaPlugin {
     public void onEnable() {
         if(new CompatibilityCheckTask(this).passedCheck()) {
             config = new AvlConfiguration(this, AvlConfiguration.CONFIG_CURRENT_VERSION, "config.yml");
-            Bukkit.getPluginManager().registerEvents(new EventListener(this), this);
+
+            regiserListeners();
+            addTasks();
+            logger().info("Successfully enabled.");
         }
+    }
+
+    public void addTasks() {
+
+    }
+
+    public void regiserListeners() {
+        Bukkit.getPluginManager().registerEvents(new EventListener(this), this);
     }
 
     public AvlConfiguration getAvlConfig() {
