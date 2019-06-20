@@ -53,4 +53,8 @@ public class MemorySetter {
             villager.getPersistentDataContainer().remove(new NamespacedKey(avl, "memoryData"));
         }
     }
+
+    public static boolean isMissingMemories(Villager villager){
+        return villager.getMemory(MemoryKey.HOME) == null || villager.getMemory(MemoryKey.JOB_SITE) == null || villager.getMemory(MemoryKey.MEETING_POINT) == null;
+    }
 }
