@@ -1,0 +1,7 @@
+# Don't change this!
+version: 1
+
+# We set the missing memories of villagers to (0,0,0) when they are frozen by SAML.
+# However, when they are frozen they can still clear these new memories, so it is of benefit to check the memories of already frozen villagers.
+# Every how many ticks should we check the frozen villagers in the world for missing memories?
+ticks-per-memory-check: 100
