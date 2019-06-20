@@ -5,7 +5,7 @@ import org.bukkit.Bukkit;
 
 public class CompatibilityCheckTask implements Runnable {
     private final static String NAME = Bukkit.getServer().getClass().getPackage().getName();
-    public final static String VERSION = NAME.substring(NAME.lastIndexOf('.') + 1);
+    private final static String VERSION = NAME.substring(NAME.lastIndexOf('.') + 1);
 
     private Avl avl;
     private String[] supportedVersions = new String[]{"v1_14_R1"};

@@ -16,7 +16,7 @@ public class Avl extends JavaPlugin {
         }
     }
 
-    public void regiserListeners() {
+    private void regiserListeners() {
         Bukkit.getPluginManager().registerEvents(new EventListener(this), this);
     }
 

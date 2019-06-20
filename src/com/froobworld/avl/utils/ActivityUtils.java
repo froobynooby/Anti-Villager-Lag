@@ -9,8 +9,8 @@ import java.lang.reflect.Method;
 import java.util.Set;
 
 public class ActivityUtils {
-    public final static String NAME = Bukkit.getServer().getClass().getPackage().getName();
-    public final static String VERSION = NAME.substring(NAME.lastIndexOf('.') + 1);
+    private final static String NAME = Bukkit.getServer().getClass().getPackage().getName();
+    private final static String VERSION = NAME.substring(NAME.lastIndexOf('.') + 1);
 
     private static Method VILLAGER_GET_HANDLE_METHOD;
     private static Method VILLAGER_GET_BEHAVIOUR_CONTROLLER_METHOD;
