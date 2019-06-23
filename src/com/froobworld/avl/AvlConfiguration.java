@@ -1,6 +1,6 @@
 package com.froobworld.avl;
 
-import com.froobworld.saml.utils.ConfigUpdater;
+import com.froobworld.avl.utils.ConfigUpdater;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.BufferedReader;
