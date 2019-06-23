@@ -3,6 +3,8 @@ package com.froobworld.avl.tasks;
 import com.froobworld.avl.Avl;
 import org.bukkit.Bukkit;
 
+import java.lang.reflect.InvocationTargetException;
+
 public class CompatibilityCheckTask implements Runnable {
     private final static String NAME = Bukkit.getServer().getClass().getPackage().getName();
     private final static String VERSION = NAME.substring(NAME.lastIndexOf('.') + 1);
@@ -20,10 +22,14 @@ public class CompatibilityCheckTask implements Runnable {
     @Override
     public void run() {
         try {
-            com.froobworld.saml.events.SamlMobUnfreezeEvent.class.getClass();
-        } catch (NoClassDefFoundError e) {
+            Class.forName("org.bukkit.craftbukkit." + VERSION + ".entity.memory.CraftMemoryMapper").getMethod("toNms", Object.class).invoke(null);
+        } catch (UnsupportedOperationException e) {
             pass = false;
-            disablePlugin("Either this plugin is not compatible with the version of SAML you are using, or you don't have SAML.");
+            disablePlugin("You need to be using a more recent build of Craftbukkit/Spigot/Paper!");
+            return;
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
+            pass = false;
+            disablePlugin("This plugin is not compatible with the version of Minecraft you are using.");
             return;
         }
         for(String string : supportedVersions) {
