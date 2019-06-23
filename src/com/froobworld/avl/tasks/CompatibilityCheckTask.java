@@ -22,7 +22,7 @@ public class CompatibilityCheckTask implements Runnable {
     @Override
     public void run() {
         try {
-            Class.forName("org.bukkit.craftbukkit." + VERSION + ".entity.memory.CraftMemoryMapper").getMethod("toNms", Object.class).invoke(null);
+            Class.forName("org.bukkit.craftbukkit." + VERSION + ".entity.memory.CraftMemoryMapper").getMethod("toNms", Object.class).invoke(null, (Object) null);
         } catch (UnsupportedOperationException e) {
             pass = false;
             disablePlugin("You need to be using a more recent build of Craftbukkit/Spigot/Paper!");
