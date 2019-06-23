@@ -1,8 +1,7 @@
-name: AVL
+name: VillagerOptimiser
 main: com.froobworld.avl.Avl
 author: froobynooby
 version: 1.0.0
 api-version: 1.14
-loadbefore: [SAML]
 description: >
-             SAML add-on for reducing lag due to villagers.
+             Limits frequency of expensive pathfinding operations of villagers.
