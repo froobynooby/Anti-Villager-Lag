@@ -14,7 +14,6 @@ public class MainTask implements Runnable {
     @Override
     public void run() {
         long ticksPerAllowSearch = avl.getAvlConfig().getLong("ticks-per-allow-search");
-        System.out.println(ticksPerAllowSearch);
         Bukkit.getScheduler().scheduleSyncDelayedTask(avl, this, ticksPerAllowSearch <= 0 ? 600 : ticksPerAllowSearch);
 
         new NormalActivityTask().run();
