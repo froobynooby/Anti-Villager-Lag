@@ -1,7 +1,6 @@
 # Don't change this!
 version: 1
 
-
 # Every how many ticks should we allow villagers with missing memories to look for a bed, job site or meeting place?
 # Don't set this too low. Anything below 200 and the plugin really won't be doing much.
 ticks-per-allow-search: 600
