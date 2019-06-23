@@ -163,4 +163,12 @@ public class ActivityUtils {
         }
     }
 
+    public static boolean isScheduleNormal(Villager villager) {
+        try {
+            return BEHAVIOUR_CONTROLLER_GET_SCHEDULE_METHOD.invoke(VILLAGER_GET_BEHAVIOUR_CONTROLLER_METHOD.invoke(VILLAGER_GET_HANDLE_METHOD.invoke(villager))) == (villager.isAdult() ? (villager.getProfession() == Villager.Profession.NITWIT ? SCHEDULE_SIMPLE : SCHEDULE_VILLAGER_DEFAULT ) : SCHEDULE_VILLAGER_BABY );
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            return false;
+        }
+    }
+
 }

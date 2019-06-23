@@ -15,8 +15,8 @@ public class RemoveActivityTask implements Runnable {
                     if(ActivityUtils.badCurrentActivity((Villager) entity)) {
                         ActivityUtils.setScheduleEmpty((Villager) entity);
                         ActivityUtils.setActivitiesNormal((Villager) entity);
-                        ActivityUtils.replaceBadMemories((Villager) entity);
                     }
+                    ActivityUtils.replaceBadMemories((Villager) entity);
                 }
             }
         }

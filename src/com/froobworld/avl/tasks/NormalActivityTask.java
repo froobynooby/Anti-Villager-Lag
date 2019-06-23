@@ -12,8 +12,10 @@ public class NormalActivityTask implements Runnable {
         for(World world : Bukkit.getWorlds()) {
             for(LivingEntity entity : world.getLivingEntities()) {
                 if(entity instanceof Villager) {
-                    ActivityUtils.setScheduleNormal((Villager) entity);
-                    ActivityUtils.setActivitiesNormal((Villager) entity);
+                    if(!ActivityUtils.wouldBeBadActivity((Villager) entity) && !ActivityUtils.isScheduleNormal((Villager) entity)) {
+                        ActivityUtils.setScheduleNormal((Villager) entity);
+                        ActivityUtils.setActivitiesNormal((Villager) entity);
+                    }
                     ActivityUtils.clearPlaceholderMemories((Villager) entity);
                 }
             }
