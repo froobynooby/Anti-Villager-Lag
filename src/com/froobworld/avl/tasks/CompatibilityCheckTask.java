@@ -23,11 +23,11 @@ public class CompatibilityCheckTask implements Runnable {
     public void run() {
         try {
             Class.forName("org.bukkit.craftbukkit." + VERSION + ".entity.memory.CraftMemoryMapper").getMethod("toNms", Object.class).invoke(null, (Object) null);
-        } catch (UnsupportedOperationException e) {
+        } catch (InvocationTargetException e) {
             pass = false;
             disablePlugin("You need to be using a more recent build of Craftbukkit/Spigot/Paper!");
             return;
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
+        } catch (IllegalAccessException | NoSuchMethodException | ClassNotFoundException e) {
             pass = false;
             disablePlugin("This plugin is not compatible with the version of Minecraft you are using.");
             return;
