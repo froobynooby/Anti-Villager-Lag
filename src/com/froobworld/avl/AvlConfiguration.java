@@ -93,8 +93,8 @@ public class AvlConfiguration {
         return config.getDouble(key);
     }
 
-    public Long getLong(String key) {
-        return config.getLong(key);
+    public long getLong(String key, long defaultValue) {
+        return config.getLong(key, defaultValue);
     }
 
     public List<String> getStringList(String key) {
