@@ -8,6 +8,8 @@ import org.bukkit.entity.memory.MemoryKey;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 public class ActivityUtils {
@@ -39,7 +41,12 @@ public class ActivityUtils {
             CURRENT_ACTIVITY_METHOD = Class.forName("net.minecraft.server." + VERSION + ".Schedule").getMethod("a", int.class);
             SET_SCHEDULE_METHOD = Class.forName("net.minecraft.server." + VERSION + ".BehaviorController").getMethod("setSchedule", Class.forName("net.minecraft.server." + VERSION + ".Schedule"));
 
-            ACTIVITIES_FIELD = Class.forName("net.minecraft.server." + VERSION + ".BehaviorController").getDeclaredField("g");
+            Map<String, String > activitiesFieldNameMap = new HashMap<>();
+            activitiesFieldNameMap.put("v1_14_R1", "g");
+            activitiesFieldNameMap.put("v1_15_R1", "g");
+            activitiesFieldNameMap.put("v1_16_R1", "j");
+
+            ACTIVITIES_FIELD = Class.forName("net.minecraft.server." + VERSION + ".BehaviorController").getDeclaredField(activitiesFieldNameMap.get(VERSION));
             ACTIVITIES_FIELD.setAccessible(true);
 
             ACTIVITY_CORE = Class.forName("net.minecraft.server." + VERSION + ".Activity").getField("CORE").get(null);
@@ -125,7 +132,7 @@ public class ActivityUtils {
             return villager.getMemory(MemoryKey.HOME) == null || isPlaceholderMemory(villager, MemoryKey.HOME);
         }
         if(activity == ACTIVITY_WORK) {
-            return villager.getMemory(MemoryKey.JOB_SITE) == null || isPlaceholderMemory(villager, MemoryKey.JOB_SITE);
+            return !VERSION.equals("v1_16_R1") && villager.getMemory(MemoryKey.JOB_SITE) == null || isPlaceholderMemory(villager, MemoryKey.JOB_SITE);
         }
         if(activity == ACTIVITY_MEET) {
             return villager.getMemory(MemoryKey.MEETING_POINT) == null || isPlaceholderMemory(villager, MemoryKey.MEETING_POINT);
@@ -138,7 +145,7 @@ public class ActivityUtils {
         if(villager.getMemory(MemoryKey.HOME) == null) {
             villager.setMemory(MemoryKey.HOME, new Location(villager.getWorld(), villager.getLocation().getBlockX(), -10000, villager.getLocation().getBlockZ()));
         }
-        if(villager.getMemory(MemoryKey.JOB_SITE) == null) {
+        if(villager.getMemory(MemoryKey.JOB_SITE) == null && !VERSION.equals("v1_16_R1")) {
             villager.setMemory(MemoryKey.JOB_SITE, new Location(villager.getWorld(), villager.getLocation().getBlockX(), -10000, villager.getLocation().getBlockZ()));
         }
         if(villager.getMemory(MemoryKey.MEETING_POINT) == null) {

@@ -10,6 +10,7 @@ import com.froobworld.avl.metrics.Metrics;
 import com.froobworld.avl.tasks.CompatibilityCheckTask;
 import com.froobworld.avl.tasks.MainTask;
 
+//TODO: Make everything horrible not horrible, i.e. rewrite the plugin
 public class Avl extends JavaPlugin {
 
 	private BukkitTask task;
