@@ -132,7 +132,7 @@ public class ActivityUtils {
             return villager.getMemory(MemoryKey.HOME) == null || isPlaceholderMemory(villager, MemoryKey.HOME);
         }
         if(activity == ACTIVITY_WORK) {
-            return !VERSION.equals("v1_16_R1") && villager.getMemory(MemoryKey.JOB_SITE) == null || isPlaceholderMemory(villager, MemoryKey.JOB_SITE);
+            return !VERSION.equals("v1_16_R1") && (villager.getMemory(MemoryKey.JOB_SITE) == null || isPlaceholderMemory(villager, MemoryKey.JOB_SITE));
         }
         if(activity == ACTIVITY_MEET) {
             return villager.getMemory(MemoryKey.MEETING_POINT) == null || isPlaceholderMemory(villager, MemoryKey.MEETING_POINT);
