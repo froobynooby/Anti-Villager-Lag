@@ -1,5 +1,6 @@
 package com.froobworld.avl.utils;
 
+import com.google.common.collect.Sets;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Villager;
@@ -13,8 +14,9 @@ import java.util.Map;
 import java.util.Set;
 
 public class ActivityUtils {
-    private final static String NAME = Bukkit.getServer().getClass().getPackage().getName();
-    private final static String VERSION = NAME.substring(NAME.lastIndexOf('.') + 1);
+    private static final String NAME = Bukkit.getServer().getClass().getPackage().getName();
+    private static final String VERSION = NAME.substring(NAME.lastIndexOf('.') + 1);
+    private static final Set<String> IGNORE_JOB_SITE_VERSIONS = Sets.newHashSet("v1_16_R1", "v1_16_R2");
 
     private static Method VILLAGER_GET_HANDLE_METHOD;
     private static Method VILLAGER_GET_BEHAVIOUR_CONTROLLER_METHOD;
@@ -45,6 +47,7 @@ public class ActivityUtils {
             activitiesFieldNameMap.put("v1_14_R1", "g");
             activitiesFieldNameMap.put("v1_15_R1", "g");
             activitiesFieldNameMap.put("v1_16_R1", "j");
+            activitiesFieldNameMap.put("v1_16_R2", "j");
 
             ACTIVITIES_FIELD = Class.forName("net.minecraft.server." + VERSION + ".BehaviorController").getDeclaredField(activitiesFieldNameMap.get(VERSION));
             ACTIVITIES_FIELD.setAccessible(true);
@@ -132,7 +135,7 @@ public class ActivityUtils {
             return villager.getMemory(MemoryKey.HOME) == null || isPlaceholderMemory(villager, MemoryKey.HOME);
         }
         if(activity == ACTIVITY_WORK) {
-            return !VERSION.equals("v1_16_R1") && (villager.getMemory(MemoryKey.JOB_SITE) == null || isPlaceholderMemory(villager, MemoryKey.JOB_SITE));
+            return !IGNORE_JOB_SITE_VERSIONS.contains(VERSION) && (villager.getMemory(MemoryKey.JOB_SITE) == null || isPlaceholderMemory(villager, MemoryKey.JOB_SITE));
         }
         if(activity == ACTIVITY_MEET) {
             return villager.getMemory(MemoryKey.MEETING_POINT) == null || isPlaceholderMemory(villager, MemoryKey.MEETING_POINT);
@@ -145,7 +148,7 @@ public class ActivityUtils {
         if(villager.getMemory(MemoryKey.HOME) == null) {
             villager.setMemory(MemoryKey.HOME, new Location(villager.getWorld(), villager.getLocation().getBlockX(), -10000, villager.getLocation().getBlockZ()));
         }
-        if(villager.getMemory(MemoryKey.JOB_SITE) == null && !VERSION.equals("v1_16_R1")) {
+        if(villager.getMemory(MemoryKey.JOB_SITE) == null && !IGNORE_JOB_SITE_VERSIONS.contains(VERSION)) {
             villager.setMemory(MemoryKey.JOB_SITE, new Location(villager.getWorld(), villager.getLocation().getBlockX(), -10000, villager.getLocation().getBlockZ()));
         }
         if(villager.getMemory(MemoryKey.MEETING_POINT) == null) {
@@ -154,7 +157,8 @@ public class ActivityUtils {
     }
 
     public static boolean isPlaceholderMemory(Villager villager, MemoryKey<Location> memoryKey) {
-        return villager.getMemory(memoryKey).getY() < 0;
+        Location memoryLocation = villager.getMemory(memoryKey);
+        return memoryLocation != null && memoryLocation.getY() < 0;
     }
 
     public static void clearPlaceholderMemories(Villager villager) {
