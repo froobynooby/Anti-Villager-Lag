@@ -48,6 +48,7 @@ public class ActivityUtils {
             activitiesFieldNameMap.put("v1_15_R1", "g");
             activitiesFieldNameMap.put("v1_16_R1", "j");
             activitiesFieldNameMap.put("v1_16_R2", "j");
+            activitiesFieldNameMap.put("v1_16_R3", "j");
 
             ACTIVITIES_FIELD = Class.forName("net.minecraft.server." + VERSION + ".BehaviorController").getDeclaredField(activitiesFieldNameMap.get(VERSION));
             ACTIVITIES_FIELD.setAccessible(true);
