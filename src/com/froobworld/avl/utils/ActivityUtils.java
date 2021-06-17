@@ -16,7 +16,7 @@ import java.util.Set;
 public class ActivityUtils {
     private static final String NAME = Bukkit.getServer().getClass().getPackage().getName();
     private static final String VERSION = NAME.substring(NAME.lastIndexOf('.') + 1);
-    private static final Set<String> IGNORE_JOB_SITE_VERSIONS = Sets.newHashSet("v1_16_R1", "v1_16_R2", "v1_16_R3");
+    private static final Set<String> IGNORE_JOB_SITE_VERSIONS = Sets.newHashSet("v1_16_R1", "v1_16_R2", "v1_16_R3", "v1_17_R1");
 
     private static Method VILLAGER_GET_HANDLE_METHOD;
     private static Method VILLAGER_GET_BEHAVIOUR_CONTROLLER_METHOD;
