@@ -1,0 +1,32 @@
+plugins {
+    id 'java'
+}
+
+group 'com.froobworld'
+version '1.1.6'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+}
+
+dependencies {
+    compileOnly group: "org.spigotmc", name: "spigot-api", version: "1.17-R0.1-SNAPSHOT"
+}
+
+processResources {
+    filter { String line -> line.replace('${version}', project.version.toString()) }
+}
+
+jar {
+    archiveFileName = project.name + '-' + project.version.toString() + '.jar'
+}
+
+artifacts {
+    jar
+}
+
+assemble.dependsOn(jar)

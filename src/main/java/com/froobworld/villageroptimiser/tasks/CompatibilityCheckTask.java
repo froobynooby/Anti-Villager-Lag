@@ -1,6 +1,6 @@
-package com.froobworld.avl.tasks;
+package com.froobworld.villageroptimiser.tasks;
 
-import com.froobworld.avl.Avl;
+import com.froobworld.villageroptimiser.VillagerOptimiser;
 import org.bukkit.Bukkit;
 
 import java.lang.reflect.InvocationTargetException;
@@ -9,12 +9,12 @@ public class CompatibilityCheckTask implements Runnable {
     private final static String NAME = Bukkit.getServer().getClass().getPackage().getName();
     private final static String VERSION = NAME.substring(NAME.lastIndexOf('.') + 1);
 
-    private Avl avl;
-    private String[] supportedVersions = new String[]{"v1_14_R1", "v1_15_R1", "v1_16_R1", "v1_16_R2", "v1_16_R3"};
+    private VillagerOptimiser avl;
+    private String[] supportedVersions = new String[]{"v1_14_R1", "v1_15_R1", "v1_16_R1", "v1_16_R2", "v1_16_R3", "v1_17_R1", "v1_17_R2", "v1_17_R3"};
 
     private boolean pass;
 
-    public CompatibilityCheckTask(Avl avl) {
+    public CompatibilityCheckTask(VillagerOptimiser avl) {
         this.avl = avl;
         run();
     }
@@ -32,20 +32,20 @@ public class CompatibilityCheckTask implements Runnable {
             disablePlugin("This plugin is not compatible with the version of Minecraft you are using.");
             return;
         }
-        for(String string : supportedVersions) {
-            if(string.equals(VERSION)) {
+        for (String string : supportedVersions) {
+            if (string.equals(VERSION)) {
                 pass = true;
                 break;
             }
             pass = false;
         }
-        if(!pass) {
+        if (!pass) {
             disablePlugin("This plugin is not compatible with the version of Minecraft you are using.");
         }
     }
 
     private void disablePlugin(String message) {
-        Avl.logger().warning(message);
+        VillagerOptimiser.logger().warning(message);
         Bukkit.getPluginManager().disablePlugin(avl);
     }
 

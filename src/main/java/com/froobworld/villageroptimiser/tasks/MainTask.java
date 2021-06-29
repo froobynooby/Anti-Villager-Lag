@@ -1,21 +1,20 @@
-package com.froobworld.avl.tasks;
+package com.froobworld.villageroptimiser.tasks;
 
+import com.froobworld.villageroptimiser.VillagerOptimiser;
 import org.bukkit.Bukkit;
 
-import com.froobworld.avl.Avl;
-
 public class MainTask implements Runnable {
-    private Avl avl;
-    
+    private VillagerOptimiser avl;
+
     private final NormalActivityTask activityTask;
     private final RemoveActivityTask removeTask;
 
-    public MainTask(Avl avl) {
+    public MainTask(VillagerOptimiser avl) {
         this.avl = avl;
-        
+
         this.activityTask = new NormalActivityTask();
         this.removeTask = new RemoveActivityTask();
-        
+
         run();
     }
 
