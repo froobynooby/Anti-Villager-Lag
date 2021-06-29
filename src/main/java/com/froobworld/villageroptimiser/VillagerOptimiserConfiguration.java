@@ -37,7 +37,7 @@ public class VillagerOptimiserConfiguration {
             VillagerOptimiser.logger().info("Couldn't find existing " + fileName + ", copying default from jar...");
             try {
                 avl.getDataFolder().mkdirs();
-                Files.copy(avl.getResource("resources/" + fileName), configFile.toPath());
+                Files.copy(avl.getResource(fileName), configFile.toPath());
             } catch (IOException e) {
                 VillagerOptimiser.logger().warning("There was a problem copying the default " + fileName + ":");
                 config = YamlConfiguration.loadConfiguration(new BufferedReader(new InputStreamReader(avl.getResource("resources/" + fileName))));
