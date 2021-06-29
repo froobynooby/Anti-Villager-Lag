@@ -1,7 +1,7 @@
 name: VillagerOptimiser
-main: com.froobworld.avl.Avl
+main: com.froobworld.villageroptimiser.VillagerOptimiser
 author: froobynooby
-version: 1.1.5
+version: 1.1.6
 api-version: 1.14
 description: >
              Limits frequency of expensive pathfinding operations of villagers.
