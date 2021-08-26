@@ -1,5 +1,7 @@
 package com.froobworld.avl.utils;
 
+import com.froobworld.avl.Avl;
+import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.Sets;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -9,9 +11,8 @@ import org.bukkit.entity.memory.MemoryKey;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class ActivityUtils {
     private static final String NAME = Bukkit.getServer().getClass().getPackage().getName();
@@ -37,31 +38,71 @@ public class ActivityUtils {
     private static Object SCHEDULE_VILLAGER_BABY;
     static {
         try {
-            VILLAGER_GET_HANDLE_METHOD =  Class.forName("org.bukkit.craftbukkit." + VERSION + ".entity.CraftVillager").getMethod("getHandle");
-            VILLAGER_GET_BEHAVIOUR_CONTROLLER_METHOD = Class.forName("net.minecraft.server." + VERSION + ".EntityLiving").getMethod("getBehaviorController");
-            BEHAVIOUR_CONTROLLER_GET_SCHEDULE_METHOD = Class.forName("net.minecraft.server." + VERSION + ".BehaviorController").getMethod("getSchedule");
-            CURRENT_ACTIVITY_METHOD = Class.forName("net.minecraft.server." + VERSION + ".Schedule").getMethod("a", int.class);
-            SET_SCHEDULE_METHOD = Class.forName("net.minecraft.server." + VERSION + ".BehaviorController").getMethod("setSchedule", Class.forName("net.minecraft.server." + VERSION + ".Schedule"));
+            List<String> remappedVersion = new ArrayList<>();
+            remappedVersion.add("v1_17_R1");
 
-            Map<String, String > activitiesFieldNameMap = new HashMap<>();
-            activitiesFieldNameMap.put("v1_14_R1", "g");
-            activitiesFieldNameMap.put("v1_15_R1", "g");
-            activitiesFieldNameMap.put("v1_16_R1", "j");
-            activitiesFieldNameMap.put("v1_16_R2", "j");
-            activitiesFieldNameMap.put("v1_16_R3", "j");
+            if (remappedVersion.contains(VERSION)) {
+                VILLAGER_GET_HANDLE_METHOD = Class.forName("org.bukkit.craftbukkit." + VERSION + ".entity.CraftVillager").getMethod("getHandle");
+                // net.minecraft.world.entity.EntityLiving.getBehaviorController
+                VILLAGER_GET_BEHAVIOUR_CONTROLLER_METHOD = Class.forName("net.minecraft.world.entity.EntityLiving").getMethod("getBehaviorController");
+                //net.minecraft.world.entity.ai.BehaviorController
+                BEHAVIOUR_CONTROLLER_GET_SCHEDULE_METHOD = Class.forName("net.minecraft.world.entity.ai.BehaviorController").getMethod("getSchedule");
+                // net.minecraft.world.entity.schedule.Schedule
+                CURRENT_ACTIVITY_METHOD = Class.forName("net.minecraft.world.entity.schedule.Schedule").getMethod("a", int.class);
 
-            ACTIVITIES_FIELD = Class.forName("net.minecraft.server." + VERSION + ".BehaviorController").getDeclaredField(activitiesFieldNameMap.get(VERSION));
-            ACTIVITIES_FIELD.setAccessible(true);
+                // net.minecraft.world.entity.ai.BehaviorController
+                Map<String, String> activitiesFieldNameMap = new HashMap<>();
+                activitiesFieldNameMap.put("v1_17_R1", "j");
 
-            ACTIVITY_CORE = Class.forName("net.minecraft.server." + VERSION + ".Activity").getField("CORE").get(null);
-            ACTIVITY_IDLE = Class.forName("net.minecraft.server." + VERSION + ".Activity").getField("IDLE").get(null);
-            ACTIVITY_WORK = Class.forName("net.minecraft.server." + VERSION + ".Activity").getField("WORK").get(null);
-            ACTIVITY_MEET = Class.forName("net.minecraft.server." + VERSION + ".Activity").getField("MEET").get(null);
-            ACTIVITY_REST = Class.forName("net.minecraft.server." + VERSION + ".Activity").getField("REST").get(null);
-            SCHEDULE_EMPTY = Class.forName("net.minecraft.server." + VERSION + ".Schedule").getField("EMPTY").get(null);
-            SCHEDULE_SIMPLE = Class.forName("net.minecraft.server." + VERSION + ".Schedule").getField("SIMPLE").get(null);
-            SCHEDULE_VILLAGER_DEFAULT = Class.forName("net.minecraft.server." + VERSION + ".Schedule").getField("VILLAGER_DEFAULT").get(null);
-            SCHEDULE_VILLAGER_BABY = Class.forName("net.minecraft.server." + VERSION + ".Schedule").getField("VILLAGER_BABY").get(null);
+                SET_SCHEDULE_METHOD = Class.forName("net.minecraft.world.entity.ai.BehaviorController").getMethod("setSchedule", Class.forName("net.minecraft.world.entity.schedule.Schedule"));
+                ACTIVITIES_FIELD = Class.forName("net.minecraft.world.entity.ai.BehaviorController").getDeclaredField(activitiesFieldNameMap.get(VERSION));
+                ACTIVITIES_FIELD.setAccessible(true);
+
+                // net.minecraft.world.entity.schedule.Activity
+                ACTIVITY_CORE = Class.forName("net.minecraft.world.entity.schedule.Activity").getField("a").get(null);
+                ACTIVITY_IDLE = Class.forName("net.minecraft.world.entity.schedule.Activity").getField("b").get(null);
+                ACTIVITY_WORK = Class.forName("net.minecraft.world.entity.schedule.Activity").getField("c").get(null);
+                ACTIVITY_REST = Class.forName("net.minecraft.world.entity.schedule.Activity").getField("e").get(null);
+                ACTIVITY_MEET = Class.forName("net.minecraft.world.entity.schedule.Activity").getField("f").get(null);
+
+                // net.minecraft.world.entity.schedule.Schedule
+                SCHEDULE_EMPTY = Class.forName("net.minecraft.world.entity.schedule.Schedule").getField("c").get(null);
+                SCHEDULE_SIMPLE = Class.forName("net.minecraft.world.entity.schedule.Schedule").getField("d").get(null);
+                SCHEDULE_VILLAGER_DEFAULT = Class.forName("net.minecraft.world.entity.schedule.Schedule").getField("f").get(null);
+                SCHEDULE_VILLAGER_BABY = Class.forName("net.minecraft.world.entity.schedule.Schedule").getField("e").get(null);
+            }
+            else {
+                VILLAGER_GET_HANDLE_METHOD = Class.forName("org.bukkit.craftbukkit." + VERSION + ".entity.CraftVillager").getMethod("getHandle");
+                VILLAGER_GET_BEHAVIOUR_CONTROLLER_METHOD = Class.forName("net.minecraft.server." + VERSION + ".EntityLiving").getMethod("getBehaviorController");
+                // 1.17.1 goes to net.minecraft.world.entity.ai.BehaviorController
+                BEHAVIOUR_CONTROLLER_GET_SCHEDULE_METHOD = Class.forName("net.minecraft.server." + VERSION + ".BehaviorController").getMethod("getSchedule");
+                // 1.17.1 goes to net.minecraft.world.entity.schedule.Schedule
+                CURRENT_ACTIVITY_METHOD = Class.forName("net.minecraft.server." + VERSION + ".Schedule").getMethod("a", int.class);
+                // 1.17.1 goes to net.minecraft.world.entity.ai.BehaviorController
+                SET_SCHEDULE_METHOD = Class.forName("net.minecraft.server." + VERSION + ".BehaviorController").getMethod("setSchedule", Class.forName("net.minecraft.server." + VERSION + ".Schedule"));
+
+                Map<String, String> activitiesFieldNameMap = new HashMap<>();
+                activitiesFieldNameMap.put("v1_14_R1", "g");
+                activitiesFieldNameMap.put("v1_15_R1", "g");
+                activitiesFieldNameMap.put("v1_16_R1", "j");
+                activitiesFieldNameMap.put("v1_16_R2", "j");
+                activitiesFieldNameMap.put("v1_16_R3", "j");
+
+                ACTIVITIES_FIELD = Class.forName("net.minecraft.server." + VERSION + ".BehaviorController").getDeclaredField(activitiesFieldNameMap.get(VERSION));
+                ACTIVITIES_FIELD.setAccessible(true);
+
+                // 1.17.1 goes to net.minecraft.world.entity.schedule.Activity
+                ACTIVITY_CORE = Class.forName("net.minecraft.server." + VERSION + ".Activity").getField("CORE").get(null);
+                ACTIVITY_IDLE = Class.forName("net.minecraft.server." + VERSION + ".Activity").getField("IDLE").get(null);
+                ACTIVITY_WORK = Class.forName("net.minecraft.server." + VERSION + ".Activity").getField("WORK").get(null);
+                ACTIVITY_MEET = Class.forName("net.minecraft.server." + VERSION + ".Activity").getField("MEET").get(null);
+                ACTIVITY_REST = Class.forName("net.minecraft.server." + VERSION + ".Activity").getField("REST").get(null);
+                // 1.17.1 goes to net.minecraft.world.entity.schedule.Schedule
+                SCHEDULE_EMPTY = Class.forName("net.minecraft.server." + VERSION + ".Schedule").getField("EMPTY").get(null);
+                SCHEDULE_SIMPLE = Class.forName("net.minecraft.server." + VERSION + ".Schedule").getField("SIMPLE").get(null);
+                SCHEDULE_VILLAGER_DEFAULT = Class.forName("net.minecraft.server." + VERSION + ".Schedule").getField("VILLAGER_DEFAULT").get(null);
+                SCHEDULE_VILLAGER_BABY = Class.forName("net.minecraft.server." + VERSION + ".Schedule").getField("VILLAGER_BABY").get(null);
+            }
         } catch (ClassNotFoundException | NoSuchMethodException | NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
         }
@@ -69,8 +110,10 @@ public class ActivityUtils {
 
     public static void setActivitiesNormal(Villager villager) {
         try {
-            ((Set) ACTIVITIES_FIELD.get(VILLAGER_GET_BEHAVIOUR_CONTROLLER_METHOD.invoke(VILLAGER_GET_HANDLE_METHOD.invoke(villager)))).clear();
-            ((Set) ACTIVITIES_FIELD.get(VILLAGER_GET_BEHAVIOUR_CONTROLLER_METHOD.invoke(VILLAGER_GET_HANDLE_METHOD.invoke(villager)))).add(ACTIVITY_CORE);
+            ImmutableCollection origin = (ImmutableCollection) ACTIVITIES_FIELD.get(VILLAGER_GET_BEHAVIOUR_CONTROLLER_METHOD.invoke(VILLAGER_GET_HANDLE_METHOD.invoke(villager)));
+            Set<Object> mutable = (Set) origin.stream().collect(Collectors.toSet());
+            mutable.clear();
+            mutable.add(ACTIVITY_CORE);
             Object currentSchedule = BEHAVIOUR_CONTROLLER_GET_SCHEDULE_METHOD.invoke(VILLAGER_GET_BEHAVIOUR_CONTROLLER_METHOD.invoke(VILLAGER_GET_HANDLE_METHOD.invoke(villager)));
             Object currentActivity;
             if(currentSchedule == null) {
@@ -78,7 +121,7 @@ public class ActivityUtils {
             } else {
                 currentActivity = CURRENT_ACTIVITY_METHOD.invoke(currentSchedule, (int) villager.getWorld().getTime());
             }
-            ((Set) ACTIVITIES_FIELD.get(VILLAGER_GET_BEHAVIOUR_CONTROLLER_METHOD.invoke(VILLAGER_GET_HANDLE_METHOD.invoke(villager)))).add(currentActivity);
+            mutable.add(currentActivity);
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
@@ -86,7 +129,9 @@ public class ActivityUtils {
 
     public static void setActivitiesEmpty(Villager villager) {
         try {
-            ((Set) ACTIVITIES_FIELD.get(VILLAGER_GET_BEHAVIOUR_CONTROLLER_METHOD.invoke(VILLAGER_GET_HANDLE_METHOD.invoke(villager)))).clear();
+            ImmutableCollection origin = (ImmutableCollection) ACTIVITIES_FIELD.get(VILLAGER_GET_BEHAVIOUR_CONTROLLER_METHOD.invoke(VILLAGER_GET_HANDLE_METHOD.invoke(villager)));
+            Set<Object> mutable = (Set) origin.stream().collect(Collectors.toSet());
+            mutable.clear();
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
